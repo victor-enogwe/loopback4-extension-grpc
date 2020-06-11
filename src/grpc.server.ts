@@ -17,7 +17,7 @@ import {GrpcGenerator} from './grpc.generator';
 import {GrpcBindings} from './keys';
 import {GrpcMethod} from './types';
 
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 const debug = debugFactory('loopback:grpc');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
