@@ -1,5 +1,5 @@
 {
-  "name": "@igamio/grpc",
+  "name": "loopback-grpc",
   "version": "0.1.1",
   "description": "A gRPC extension for LoopBack Next",
   "main": "index.js",
