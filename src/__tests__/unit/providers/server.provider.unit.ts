@@ -5,7 +5,7 @@
 
 import {expect} from '@loopback/testlab';
 import {ServerProvider} from '../../..';
-import * as grpc from 'grpc';
+import grpc from '@grpc/grpc-js';
 
 describe('ServerProvider', () => {
   it('returns a grpc singleton server', () => {

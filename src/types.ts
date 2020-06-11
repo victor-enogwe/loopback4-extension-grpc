@@ -5,6 +5,7 @@
 
 import {Constructor} from '@loopback/context';
 import {GrpcSequenceInterface} from './grpc.sequence';
+import {GrpcSecureOptions} from './keys';
 
 export interface GrpcService {
   cwd?: string;
@@ -16,10 +17,11 @@ export interface GrpcService {
    * An array of glob patterns to ignore for proto files,
    * default to ['**\/node_modules\/**]
    */
-  protoIngores?: string[];
+  protoIgnores?: string[];
   host?: string;
   port?: number;
   sequence?: Constructor<GrpcSequenceInterface>;
+  certs?: GrpcSecureOptions;
 }
 
 export interface GrpcMethod {

@@ -4,7 +4,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
+    "module": "CommonJS",
     "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "target": "ES6"
   },
   "include": [

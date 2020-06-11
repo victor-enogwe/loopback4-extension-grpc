@@ -3,20 +3,13 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {
-  Component,
-  ProviderMap,
-  Server,
-  CoreBindings,
-  Application,
-} from '@loopback/core';
+import {Component, ProviderMap, Server, CoreBindings, Application, ApplicationConfig} from '@loopback/core';
 import {inject, Constructor} from '@loopback/context';
 import {GrpcBindings} from './keys';
 import {ServerProvider} from './providers/server.provider';
 import {GrpcServer} from './grpc.server';
 import {GrpcSequence} from './grpc.sequence';
 import {GeneratorProvider} from './providers/generator.provider';
-import {GrpcService} from './types';
 /**
  * Grpc Component for LoopBack 4.
  */
@@ -37,22 +30,15 @@ export class GrpcComponent implements Component {
 
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,
-    @inject(GrpcBindings.CONFIG) config: GrpcService,
+    @inject(CoreBindings.APPLICATION_CONFIG, {optional: true}) config: ApplicationConfig,
   ) {
-    // Set default configuration for this component
-    config = Object.assign(
-      {
-        host: '127.0.0.1',
-        port: 3000,
-      },
-      config,
-    );
-    // Bind host, port, proto path, package and sequence
-    app.bind(GrpcBindings.HOST).to(config.host);
-    app.bind(GrpcBindings.PORT).to(config.port);
-
-    app
-      .bind(GrpcBindings.GRPC_SEQUENCE)
-      .toClass(config.sequence ?? GrpcSequence);
+    // Bind host, port, certs, proto path, package and sequence
+    app.bind(GrpcBindings.HOST).to(config.grpc.host ?? '127.0.0.1');
+    app.bind(GrpcBindings.PORT).to(config.grpc.port ?? 3000);
+    app.bind(GrpcBindings.PROTO_PATTERN).to(config.grpc.protoPattern);
+    app.bind(GrpcBindings.PROTO_IGNORES).to(config.grpc.protoIgnores);
+    app.bind(GrpcBindings.CWD).to(config.grpc.cwd ?? process.cwd());
+    app.bind(GrpcBindings.CERTS).to(config.grpc.certs);
+    app.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.grpc.sequence ?? GrpcSequence);
   }
 }

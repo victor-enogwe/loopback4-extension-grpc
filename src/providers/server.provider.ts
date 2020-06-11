@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Provider} from '@loopback/context';
-import {Server} from 'grpc';
+import {Server} from '@grpc/grpc-js';
 
 /**
  * This provider will creates a GRPC Server

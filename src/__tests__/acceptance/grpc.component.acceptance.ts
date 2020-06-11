@@ -6,22 +6,13 @@
 import {Constructor, inject} from '@loopback/context';
 import {Application} from '@loopback/core';
 import {expect} from '@loopback/testlab';
-import * as grpcModule from 'grpc';
-import {
-  grpc,
-  GrpcBindings,
-  GrpcComponent,
-  GrpcSequenceInterface,
-  GrpcServer,
-  GrpcService,
-} from '../..';
-import {
-  Greeter,
-  HelloReply,
-  HelloRequest,
-  TestRequest,
-  TestReply,
-} from './greeter.proto';
+import {loadSync} from '@grpc/proto-loader';
+import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcServer, GrpcService} from '../..';
+import {Greeter, HelloReply, HelloRequest, TestRequest, TestReply} from './greeter.proto';
+import {GrpcSequence} from '../../grpc.sequence';
+import {join} from 'path';
+import {loadPackageDefinition, Client, credentials, ServerUnaryCall} from '@grpc/grpc-js';
+import {ServiceClientConstructor, GrpcObject} from '@grpc/grpc-js/build/src/make-client';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -92,16 +83,15 @@ describe('GrpcComponent', () => {
       }
     }
 
-    class MySequence implements GrpcSequenceInterface {
+    class MySequence extends GrpcSequence {
       constructor(
-        @inject(GrpcBindings.GRPC_CONTROLLER)
-        protected controller: {[method: string]: Function},
+        @inject(GrpcBindings.GRPC_CONTROLLER) protected controller: {[method: string]: Function},
         @inject(GrpcBindings.GRPC_METHOD_NAME) protected method: string,
-      ) {}
+      ) {
+        super(controller, method);
+      }
       // tslint:disable-next-line:no-any
-      async unaryCall(
-        call: grpcModule.ServerUnaryCall<any>,
-      ): Promise<HelloReply> {
+      async unaryCall(call: ServerUnaryCall<any, any>): Promise<any> {
         // Do something before call
         const reply = await this.controller[this.method](call.request);
         reply.message += ' Sequenced';
@@ -109,6 +99,7 @@ describe('GrpcComponent', () => {
         return reply;
       }
     }
+
     // Load LoopBack Application
     const app: Application = givenApplication(MySequence);
     app.controller(GreeterCtrl);
@@ -126,9 +117,7 @@ describe('GrpcComponent', () => {
 /**
  * Returns GRPC Enabled Application
  **/
-function givenApplication(
-  sequence?: Constructor<GrpcSequenceInterface>,
-): Application {
+function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Application {
   const grpcConfig: GrpcService = {port: 8080};
   if (sequence) {
     grpcConfig.sequence = sequence;
@@ -143,23 +132,24 @@ function givenApplication(
  * Returns GRPC Client
  **/
 function getGrpcClient(app: Application) {
-  const proto = grpcModule.load('./fixtures/greeter.proto')[
-    'greeterpackage'
-  ] as grpcModule.GrpcObject;
-  const client = proto.Greeter as typeof grpcModule.Client;
-  return new client(
+  const packageDef = loadSync(join(__dirname, '../../../', 'fixtures/greeter.proto'), {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+  });
+  const proto = loadPackageDefinition(packageDef);
+  const client = proto.greeterpackage as GrpcObject;
+  return new (client.Greeter as ServiceClientConstructor)(
     `${app.getSync(GrpcBindings.HOST)}:${app.getSync(GrpcBindings.PORT)}`,
-    grpcModule.credentials.createInsecure(),
+    credentials.createInsecure(),
   );
 }
 /**
  * Callback to Promise Wrapper
  **/
-async function asyncCall(input: {
-  client: grpcModule.Client;
-  method: string;
-  data: any;
-}): Promise<HelloReply> {
+async function asyncCall(input: {client: Client; method: string; data: any}): Promise<HelloReply> {
   const client = input.client as any;
   return new Promise<HelloReply>((resolve, reject) =>
     client[input.method](input.data, (err: any, response: HelloReply) => {

@@ -5,9 +5,9 @@
 
 import {execSync} from 'child_process';
 import * as glob from 'glob';
-import * as grpc from 'grpc';
-import {GrpcObject} from 'grpc';
-import * as path from 'path';
+import {loadSync} from '@grpc/proto-loader';
+import {GrpcObject, loadPackageDefinition} from '@grpc/grpc-js';
+import {dirname, resolve} from 'path';
 import {GrpcService} from './types';
 
 /**
@@ -27,18 +27,23 @@ export class GrpcGenerator {
    * @param - config
    */
   constructor(protected config: GrpcService) {}
+
   /**
    * This method will find and load all protos
    * contained within the project directory. Saving in memory
    * instances for those found protos for later usage.
+   *
+   * @returns {void}
+   * @memberof GrpcGenerator
    */
   public execute(): void {
-    this.getProtoPaths().forEach((protoPath: string) => {
-      const protoName: string = protoPath.split('/').pop() ?? '';
-      this.protos[protoName] = this.loadProto(protoPath);
-      this.generate(protoPath);
+    const protoPaths = this.getProtoPaths().map((path) => ({path, name: path.split('/').pop() ?? ''}));
+    protoPaths.forEach((path) => {
+      this.protos[path.name] = this.loadProto(path.path);
+      this.generate(path.path);
     });
   }
+
   /**
    * This method will return a proto instance
    * from the proto list directory, previously loaded during
@@ -50,27 +55,42 @@ export class GrpcGenerator {
   public getProto(name: string): GrpcObject {
     return this.protos[name];
   }
+
   /**
    * This method receive a proto file path and
    * load that proto using the official grpc library.
    *
-   * @param protoPath
+   * @param {string} protoPath
+   * @returns {GrpcObject}
+   * @memberof GrpcGenerator
    */
   public loadProto(protoPath: string): GrpcObject {
-    const proto: GrpcObject = grpc.load(protoPath);
+    const packageDef = loadSync(protoPath, {
+      keepCase: true,
+      longs: String,
+      enums: String,
+      defaults: true,
+      oneofs: true,
+    });
+    const proto = loadPackageDefinition(packageDef);
     return proto;
   }
+
   /**
    * This method will getProtoPaths a directory look ahead and
    * typescript files generations from found proto files.
+   *
+   * @returns {string[]}
+   * @memberof GrpcGenerator
    */
   public getProtoPaths(): string[] {
     const pattern = this.config.protoPattern ?? '**/*.proto';
-    const ignores = this.config.protoIngores ?? ['**/node_modules/**'];
-    const options = {
+    const ignores = this.config.protoIgnores ?? ['**/node_modules/**'];
+    const options: glob.IOptions = {
       cwd: this.config.cwd ?? process.cwd(),
       ignore: ignores,
       nodir: true,
+      absolute: true,
     };
     return glob.sync(pattern, options);
   }
@@ -80,26 +100,18 @@ export class GrpcGenerator {
    * file representing the provided proto file by calling
    * google's proto compiler and using `@mean-experts`'s
    * protoc-ts plugin.
-   * @param proto
    *
+   * @private
+   * @param {string} proto
+   * @returns {Buffer}
+   * @memberof GrpcGenerator
    */
   private generate(proto: string): Buffer {
-    const root = path.dirname(proto);
+    const root = dirname(proto);
     const isWin = process.platform === 'win32';
-    return execSync(
-      `${path.join(
-        __dirname,
-        '../', // Root of grpc module and not the dist dir
-        'compilers',
-        process.platform,
-        'bin',
-        `protoc${isWin ? '.exe' : ''}`,
-      )} --plugin=protoc-gen-ts=${path.join(
-        process.cwd(),
-        'node_modules',
-        '.bin',
-        `protoc-gen-ts${isWin ? '.cmd' : ''}`,
-      )} --ts_out service=true:${root} -I ${root} ${proto}`,
-    );
+    const compilers = resolve(__dirname, '../', 'compilers');
+    const protoc = `${compilers}/${process.platform}/bin/protoc${isWin ? '.exe' : ''}`;
+    const protocGen = require.resolve(`@mean-expert/protoc-ts/bin/protoc-gen-ts${isWin ? '.cmd' : ''}`);
+    return execSync(`${protoc} --plugin=protoc-gen-ts=${protocGen} --ts_out service=true:${root} -I ${root} ${proto}`);
   }
 }

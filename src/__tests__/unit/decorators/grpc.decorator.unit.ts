@@ -6,13 +6,7 @@
 import {MetadataInspector} from '@loopback/metadata';
 import {expect} from '@loopback/testlab';
 import {grpc, GRPC_METHODS} from '../../..';
-import {
-  Greeter,
-  HelloReply,
-  HelloRequest,
-  TestRequest,
-  TestReply,
-} from '../../acceptance/greeter.proto';
+import {Greeter, HelloReply, HelloRequest, TestRequest, TestReply} from '../../acceptance/greeter.proto';
 
 describe('@rpc decorator', () => {
   it('defines reflection metadata for rpc method', () => {
@@ -29,15 +23,12 @@ describe('@rpc decorator', () => {
         };
       }
 
-      Helper(): boolean {
+      helper(): boolean {
         return true;
       }
     }
 
-    const controllerMethods = MetadataInspector.getAllMethodMetadata(
-      GRPC_METHODS,
-      GreeterCtrl.prototype,
-    );
+    const controllerMethods = MetadataInspector.getAllMethodMetadata(GRPC_METHODS, GreeterCtrl.prototype);
     expect(controllerMethods).to.have.property('sayHello');
   });
 });

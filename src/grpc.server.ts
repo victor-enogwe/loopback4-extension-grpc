@@ -4,17 +4,12 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {BindingScope, Context, inject} from '@loopback/context';
-import {
-  Application,
-  ControllerClass,
-  CoreBindings,
-  Server,
-} from '@loopback/core';
+import {Application, ControllerClass, CoreBindings, Server} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
-import * as grpc from 'grpc';
+import {Server as RpcServer, ServerUnaryCall, ServerCredentials, ServiceDefinition, handleUnaryCall, GrpcObject} from '@grpc/grpc-js';
 import {GRPC_METHODS} from './decorators/grpc.decorator';
 import {GrpcGenerator} from './grpc.generator';
-import {GrpcBindings} from './keys';
+import {GrpcBindings, GrpcSecureOptions} from './keys';
 import {GrpcMethod} from './types';
 
 import debugFactory from 'debug';
@@ -26,7 +21,7 @@ const debug = debugFactory('loopback:grpc');
  * This Class provides a LoopBack Server implementing gRPC
  */
 export class GrpcServer extends Context implements Server {
-  private _listening = false;
+  protected _listening = false;
   /**
    * @memberof GrpcServer
    * Creates an instance of GrpcServer.
@@ -41,23 +36,19 @@ export class GrpcServer extends Context implements Server {
    */
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) protected app: Application,
-    @inject(GrpcBindings.GRPC_SERVER) protected server: grpc.Server,
+    @inject(GrpcBindings.GRPC_SERVER) protected server: RpcServer,
     @inject(GrpcBindings.HOST) protected host: string,
     @inject(GrpcBindings.PORT) protected port: string,
     @inject(GrpcBindings.GRPC_GENERATOR) protected generator: GrpcGenerator,
+    @inject(GrpcBindings.CERTS) protected secureOptions?: GrpcSecureOptions,
   ) {
     super(app);
     // Execute TypeScript Generator. (Must be first one to load)
     this.generator.execute();
-    // Setup Controllers
     for (const b of this.find('controllers.*')) {
       const controllerName = b.key.replace(/^controllers\./, '');
       const ctor = b.valueConstructor;
-      if (!ctor) {
-        throw new Error(
-          `The controller ${controllerName} was not bound via .toClass()`,
-        );
-      }
+      if (!ctor) throw new Error(`The controller ${controllerName} was not bound via .toClass()`);
       this._setupControllerMethods(ctor);
     }
   }
@@ -67,10 +58,13 @@ export class GrpcServer extends Context implements Server {
   }
 
   async start(): Promise<void> {
-    this.server.bind(
-      `${this.host}:${this.port}`,
-      grpc.ServerCredentials.createInsecure(),
-    );
+    let creds = ServerCredentials.createInsecure();
+    if (this.secureOptions !== undefined) {
+      const {rootCerts, keyCertPairs, checkClientCertificate} = this.secureOptions;
+      creds = ServerCredentials.createSsl(rootCerts, keyCertPairs, checkClientCertificate);
+    }
+    const host = `${this.host}:${this.port}`;
+    await new Promise((resolve, reject) => this.server.bindAsync(host, creds, (error, port) => (error ? reject(error) : resolve(port))));
     this.server.start();
     this._listening = true;
   }
@@ -81,35 +75,25 @@ export class GrpcServer extends Context implements Server {
   }
 
   private _setupControllerMethods(ctor: ControllerClass) {
-    const controllerMethods =
-      MetadataInspector.getAllMethodMetadata<GrpcMethod>(
-        GRPC_METHODS,
-        ctor.prototype,
-      ) ?? {};
-
-    const services = new Map<
-      grpc.ServiceDefinition<any>,
-      {[method: string]: grpc.handleUnaryCall<grpc.ServerUnaryCall<any>, any>}
-    >();
+    const controllerMethods = MetadataInspector.getAllMethodMetadata<GrpcMethod>(GRPC_METHODS, ctor.prototype) ?? {};
+    const services = new Map<ServiceDefinition<any>, {[method: string]: handleUnaryCall<ServerUnaryCall<any, any>, any>}>();
 
     for (const methodName in controllerMethods) {
       const config = controllerMethods[methodName];
       debug('Config for method %s', methodName, config);
 
-      const proto: grpc.GrpcObject = this.generator.getProto(config.PROTO_NAME);
+      const proto: GrpcObject = this.generator.getProto(config.PROTO_NAME);
       debug('Proto for %s', config.PROTO_NAME, proto);
 
-      if (!proto) {
-        throw new Error(`Grpc Server: No proto file was provided.`);
-      }
+      if (!proto) throw new Error(`Grpc Server: No proto file was provided.`);
 
-      const pkgMeta = proto[config.PROTO_PACKAGE] as grpc.GrpcObject;
+      const pkgMeta = proto[config.PROTO_PACKAGE] as GrpcObject;
       debug('Package for %s', config.PROTO_PACKAGE, pkgMeta);
 
       const serviceMeta = pkgMeta[config.SERVICE_NAME] as any;
       debug('Service for %s', config.SERVICE_NAME, serviceMeta);
 
-      const serviceDef: grpc.ServiceDefinition<any> = serviceMeta.service;
+      const serviceDef: ServiceDefinition<any> = serviceMeta.service;
       if (!services.has(serviceDef)) {
         services.set(serviceDef, {
           [config.METHOD_NAME]: this.setupGrpcCall(ctor, methodName),
@@ -132,28 +116,19 @@ export class GrpcServer extends Context implements Server {
    * @param prototype
    * @param methodName
    */
-  private setupGrpcCall<T>(
-    ctor: ControllerClass,
-    methodName: string,
-  ): grpc.handleUnaryCall<grpc.ServerUnaryCall<any>, any> {
-    return (
-      call: grpc.ServerUnaryCall<any>,
-      callback: (err: any, value?: T) => void,
-    ) => {
+  private setupGrpcCall<T>(ctor: ControllerClass, methodName: string): handleUnaryCall<ServerUnaryCall<any, any>, any> {
+    return (call: ServerUnaryCall<any, any>, callback: (err: any, value?: T) => void) => {
       const handleUnary = async (): Promise<T> => {
         this.bind(GrpcBindings.CONTEXT).to(this);
-        this.bind(GrpcBindings.GRPC_CONTROLLER)
-          .toClass(ctor)
-          .inScope(BindingScope.SINGLETON);
+        this.bind(GrpcBindings.GRPC_CONTROLLER).toClass(ctor).inScope(BindingScope.SINGLETON);
         this.bind(GrpcBindings.GRPC_METHOD_NAME).to(methodName);
         const sequence = await this.get(GrpcBindings.GRPC_SEQUENCE);
         return sequence.unaryCall(call);
       };
+
       handleUnary().then(
         (result) => callback(null, result),
-        (error) => {
-          callback(error);
-        },
+        (error) => callback(error),
       );
     };
   }
