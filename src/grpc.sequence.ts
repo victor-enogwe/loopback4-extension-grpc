@@ -4,10 +4,15 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {inject} from '@loopback/context';
-import {ServerUnaryCall} from 'grpc';
+import {
+  ServerUnaryCall,
+  ServerReadableStream,
+  ServerWriteableStream,
+  ServerDuplexStream,
+} from 'grpc';
 import {GrpcBindings} from './keys';
 
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 const debug = debugFactory('loopback:grpc');
 
 /**
@@ -40,5 +45,23 @@ export class GrpcSequence implements GrpcSequenceInterface {
     const reply = await this.controller[this.method](call.request);
     // Do something after call
     return reply;
+  }
+
+  // tslint:disable-next-line:no-any
+  async clientStreamingCall(
+    clientStream: ServerReadableStream<any>,
+  ): Promise<any> {
+    const reply = await this.controller[this.method](clientStream);
+    return reply;
+  }
+
+  // tslint:disable-next-line:no-any
+  processServerStream(stream: ServerWriteableStream<any>): void {
+    this.controller[this.method](stream);
+  }
+
+  // tslint:disable-next-line:no-any
+  processBidiStream(stream: ServerDuplexStream<any, any>): void {
+    this.controller[this.method](stream);
   }
 }

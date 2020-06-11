@@ -3,7 +3,11 @@
   "extends": "@loopback/build/config/tsconfig.build.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "target": "ES6"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

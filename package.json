@@ -50,28 +50,28 @@
     "!*/__tests__"
   ],
   "dependencies": {
-    "@loopback/context": "^1.21.4",
-    "@loopback/core": "^1.9.3",
-    "@loopback/metadata": "^1.2.10",
-    "@loopback/repository": "^1.12.0",
-    "@loopback/rest": "^1.17.0",
+    "@loopback/context": "^3.8.2",
+    "@loopback/core": "^2.7.1",
+    "@loopback/metadata": "^2.1.6",
+    "@loopback/repository": "^2.6.0",
+    "@loopback/rest": "^5.1.0",
     "@mean-expert/protoc-ts": "0.0.2",
     "debug": "^4.1.1",
-    "glob": "^7.1.4",
-    "grpc": "^1.23.3",
+    "glob": "^7.1.6",
+    "grpc": "1.24.3",
     "protobufjs": "^6.8.8"
   },
   "devDependencies": {
-    "@loopback/build": "^2.0.8",
-    "@loopback/eslint-config": "^4.0.1",
-    "@loopback/testlab": "^1.7.4",
+    "@loopback/build": "^5.4.2",
+    "@loopback/eslint-config": "^8.0.0",
+    "@loopback/testlab": "^3.1.6",
     "@types/debug": "^4.1.5",
     "@types/glob": "^7.1.1",
-    "@typescript-eslint/eslint-plugin": "^2.0.0",
-    "@typescript-eslint/parser": "^2.0.0",
-    "eslint": "^6.2.2",
-    "eslint-config-prettier": "^6.1.0",
-    "eslint-plugin-eslint-plugin": "^2.1.0",
-    "eslint-plugin-mocha": "^6.1.0"
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-eslint-plugin": "^2.2.1",
+    "eslint-plugin-mocha": "^7.0.0"
   }
 }

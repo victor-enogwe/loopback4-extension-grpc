@@ -85,7 +85,7 @@ export class GrpcServer extends Context implements Server {
       MetadataInspector.getAllMethodMetadata<GrpcMethod>(
         GRPC_METHODS,
         ctor.prototype,
-      ) || {};
+      ) ?? {};
 
     const services = new Map<
       grpc.ServiceDefinition<any>,
@@ -150,8 +150,8 @@ export class GrpcServer extends Context implements Server {
         return sequence.unaryCall(call);
       };
       handleUnary().then(
-        result => callback(null, result),
-        error => {
+        (result) => callback(null, result),
+        (error) => {
           callback(error);
         },
       );
