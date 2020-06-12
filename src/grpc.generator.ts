@@ -109,9 +109,10 @@ export class GrpcGenerator {
   private generate(proto: string): Buffer {
     const root = dirname(proto);
     const isWin = process.platform === 'win32';
+    const outDir = this.config.protoOutDir ? `/${this.config.protoOutDir}` : ''
     const compilers = resolve(__dirname, '../', 'compilers');
     const protoc = `${compilers}/${process.platform}/bin/protoc${isWin ? '.exe' : ''}`;
     const protocGen = require.resolve(`@mean-expert/protoc-ts/bin/protoc-gen-ts${isWin ? '.cmd' : ''}`);
-    return execSync(`${protoc} --plugin=protoc-gen-ts=${protocGen} --ts_out service=true:${root} -I ${root} ${proto}`);
+    return execSync(`${protoc} --plugin=protoc-gen-ts=${protocGen} --ts_out service=true:${root}${outDir} -I ${root} ${proto}`);
   }
 }

@@ -37,6 +37,7 @@ export class GrpcComponent implements Component {
     app.bind(GrpcBindings.PORT).to(config.grpc.port ?? 3000);
     app.bind(GrpcBindings.PROTO_PATTERN).to(config.grpc.protoPattern);
     app.bind(GrpcBindings.PROTO_IGNORES).to(config.grpc.protoIgnores);
+    app.bind(GrpcBindings.PROTO_OUT_DIR).to(config.grpc.protoOutDir);
     app.bind(GrpcBindings.CWD).to(config.grpc.cwd ?? process.cwd());
     app.bind(GrpcBindings.CERTS).to(config.grpc.certs);
     app.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.grpc.sequence ?? GrpcSequence);

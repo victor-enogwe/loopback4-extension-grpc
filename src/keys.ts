@@ -30,5 +30,6 @@ export namespace GrpcBindings {
   export const CWD = BindingKey.create<string | undefined>('grpc.cwd');
   export const PROTO_PATTERN = BindingKey.create<string | undefined>('grpc.protoPattern');
   export const PROTO_IGNORES = BindingKey.create<string[] | undefined>('grpc.protoIgnores');
+  export const PROTO_OUT_DIR = BindingKey.create<string | undefined>('grpc.protoOutDir');
   export const CERTS = BindingKey.create<GrpcSecureOptions | undefined>('grpc.certs');
 }
