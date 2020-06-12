@@ -10,7 +10,7 @@ import {loadSync} from '@grpc/proto-loader';
 import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcServer, GrpcService} from '../..';
 import {Greeter, HelloReply, HelloRequest, TestRequest, TestReply} from './greeter.proto';
 import {GrpcSequence} from '../../grpc.sequence';
-import {join} from 'path';
+import path from 'path';
 import {loadPackageDefinition, Client, credentials, ServerUnaryCall} from '@grpc/grpc-js';
 import {ServiceClientConstructor, GrpcObject} from '@grpc/grpc-js/build/src/make-client';
 
@@ -118,7 +118,7 @@ describe('GrpcComponent', () => {
  * Returns GRPC Enabled Application
  **/
 function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Application {
-  const grpcConfig: GrpcService = {port: 8080};
+  const grpcConfig: GrpcService = {port: 8080, protoOutDir: path.resolve(__dirname)};
   if (sequence) {
     grpcConfig.sequence = sequence;
   }
@@ -132,7 +132,7 @@ function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Applic
  * Returns GRPC Client
  **/
 function getGrpcClient(app: Application) {
-  const packageDef = loadSync(join(__dirname, '../../../', 'fixtures/greeter.proto'), {
+  const packageDef = loadSync(path.join(__dirname, '../../../', 'fixtures/greeter.proto'), {
     keepCase: true,
     longs: String,
     enums: String,

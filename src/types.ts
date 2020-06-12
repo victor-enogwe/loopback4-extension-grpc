@@ -18,7 +18,7 @@ export interface GrpcService {
    * default to ['**\/node_modules\/**]
    */
   protoIgnores?: string[];
-  protoOutDir?: string
+  protoOutDir?: string;
   host?: string;
   port?: number;
   sequence?: Constructor<GrpcSequenceInterface>;
