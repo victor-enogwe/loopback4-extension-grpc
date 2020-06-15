@@ -126,10 +126,9 @@ export class GrpcServer extends Context implements Server {
         return sequence.unaryCall(call);
       };
 
-      handleUnary().then(
-        (result) => callback(null, result),
-        (error) => callback(error),
-      );
+      return handleUnary()
+        .then((result) => callback(null, result))
+        .catch((error) => callback(error));
     };
   }
 }

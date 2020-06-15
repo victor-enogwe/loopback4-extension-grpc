@@ -66,7 +66,7 @@ export class GrpcGenerator {
    */
   public loadProto(protoPath: string): GrpcObject {
     const packageDef = loadSync(protoPath, {
-      keepCase: true,
+      keepCase: false,
       longs: String,
       enums: String,
       defaults: true,
