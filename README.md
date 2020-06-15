@@ -11,7 +11,7 @@ The `@loopback/grpc` component enables LoopBack 4 as a [gRPC](https://grpc.io/) 
 Install the `@loopback/grpc` component in your LoopBack 4 Application.
 
 ```sh
-$ npm install --save @loopback/grpc
+npm install --save loopback4-extension-grpc.git
 ```
 
 ## Component Configuration
@@ -116,8 +116,8 @@ message HelloReply {
 Get started by either downloading this project or cloning it as follows:
 
 ```sh
-$ git clone https://github.com/strongloop/loopback4-extension-grpc.git
-$ cd loopback4-extension-grpc && npm install
+git clone https://github.com/strongloop/loopback4-extension-grpc.git
+cd loopback4-extension-grpc && npm install
 ```
 
 ## Contributions
