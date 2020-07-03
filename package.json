@@ -1,6 +1,6 @@
 {
   "name": "loopback-grpc",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "A gRPC extension for LoopBack Next",
   "main": "index.js",
   "engines": {
@@ -37,9 +37,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/strongloop/loopback4-extension-grpc/issues"
+    "url": "https://github.com/victor-enogwe/loopback4-extension-grpc/issues"
   },
-  "homepage": "https://github.com/strongloop/loopback4-extension-grpc#readme",
+  "homepage": "https://github.com/victor-enogwe/loopback4-extension-grpc#readme",
   "files": [
     "README.md",
     "index.js",
