@@ -123,8 +123,9 @@ function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Applic
     grpcConfig.sequence = sequence;
   }
   const app = new Application({
-    grpc: grpcConfig,
+    grpc: {space: grpcConfig},
   });
+  GrpcComponent.namespace = 'space';
   app.component(GrpcComponent);
   return app;
 }
