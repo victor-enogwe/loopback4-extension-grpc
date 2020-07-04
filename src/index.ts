@@ -3,7 +3,6 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-export * from './providers/server.provider';
 export * from './decorators/grpc.decorator';
 export * from './grpc.server';
 export * from './grpc.component';

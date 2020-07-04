@@ -21,6 +21,7 @@ const debug = debugFactory('loopback:grpc');
  * This Class provides a LoopBack Server implementing gRPC
  */
 export class GrpcServer extends Context implements Server {
+  private server: RpcServer = new RpcServer();
   protected _listening = false;
   /**
    * @memberof GrpcServer
@@ -29,14 +30,12 @@ export class GrpcServer extends Context implements Server {
    * @param app - The application instance (injected via
    * CoreBindings.APPLICATION_INSTANCE).
    * @param server - The actual GRPC Server module (injected via
-   * GrpcBindings.GRPC_SERVER).
    * @param options - The configuration options (injected via
    * GRPCBindings.CONFIG).
    *
    */
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) protected app: Application,
-    @inject(GrpcBindings.GRPC_SERVER) protected server: RpcServer,
     @inject(GrpcBindings.HOST) protected host: string,
     @inject(GrpcBindings.PORT) protected port: string,
     @inject(GrpcBindings.GRPC_GENERATOR) protected generator: GrpcGenerator,

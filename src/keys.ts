@@ -4,8 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {BindingKey, Context} from '@loopback/context';
-import {CoreBindings} from '@loopback/core';
-import {Server, KeyCertPair} from '@grpc/grpc-js';
+import {KeyCertPair} from '@grpc/grpc-js';
 import {GrpcSequenceInterface} from './grpc.sequence';
 
 export interface GrpcSecureOptions {
@@ -18,7 +17,6 @@ export interface GrpcSecureOptions {
  * Binding keys used by this component.
  */
 export namespace GrpcBindings {
-  export const GRPC_SERVER = BindingKey.create<Server>('grpc.server');
   export const GRPC_SEQUENCE = BindingKey.create<GrpcSequenceInterface>('grpc.sequence');
   export const GRPC_CONTROLLER = 'grpc.controller';
   export const GRPC_METHOD = 'grpc.method';
