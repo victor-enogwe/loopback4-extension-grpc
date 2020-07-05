@@ -3,8 +3,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingScope, Context, inject} from '@loopback/context';
-import {Application, ControllerClass, CoreBindings, Server} from '@loopback/core';
+import {BindingScope, inject} from '@loopback/context';
+import {Application, ControllerClass, CoreBindings, Server, Context} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
 import {Server as RpcServer, ServerUnaryCall, ServerCredentials, ServiceDefinition, handleUnaryCall, GrpcObject} from '@grpc/grpc-js';
 import {GRPC_METHODS} from './decorators/grpc.decorator';
@@ -13,6 +13,7 @@ import {GrpcBindings, GrpcSecureOptions} from './keys';
 import {GrpcMethod} from './types';
 
 import debugFactory from 'debug';
+import {GrpcSequence} from './grpc.sequence';
 const debug = debugFactory('loopback:grpc');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -21,7 +22,6 @@ const debug = debugFactory('loopback:grpc');
  * This Class provides a LoopBack Server implementing gRPC
  */
 export class GrpcServer extends Context implements Server {
-  private server: RpcServer = new RpcServer();
   protected _listening = false;
   /**
    * @memberof GrpcServer
@@ -36,12 +36,25 @@ export class GrpcServer extends Context implements Server {
    */
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) protected app: Application,
+    @inject(GrpcBindings.GRPC_SERVER) protected server: RpcServer,
     @inject(GrpcBindings.HOST) protected host: string,
     @inject(GrpcBindings.PORT) protected port: string,
     @inject(GrpcBindings.GRPC_GENERATOR) protected generator: GrpcGenerator,
     @inject(GrpcBindings.CERTS) protected secureOptions?: GrpcSecureOptions,
   ) {
     super(app);
+    this.migrateSchema();
+  }
+
+  public get listening() {
+    return this._listening;
+  }
+
+  public set listening(value: boolean) {
+    this._listening = value;
+  }
+
+  migrateSchema() {
     // Execute TypeScript Generator. (Must be first one to load)
     this.generator.execute();
     for (const b of this.find('controllers.*')) {
@@ -50,10 +63,6 @@ export class GrpcServer extends Context implements Server {
       if (!ctor) throw new Error(`The controller ${controllerName} was not bound via .toClass()`);
       this._setupControllerMethods(ctor);
     }
-  }
-
-  public get listening() {
-    return this._listening;
   }
 
   async start(): Promise<void> {
@@ -65,12 +74,12 @@ export class GrpcServer extends Context implements Server {
     const host = `${this.host}:${this.port}`;
     await new Promise((resolve, reject) => this.server.bindAsync(host, creds, (error, port) => (error ? reject(error) : resolve(port))));
     this.server.start();
-    this._listening = true;
+    this.listening = true;
   }
 
   async stop(): Promise<void> {
     this.server.forceShutdown();
-    this._listening = false;
+    this.listening = false;
   }
 
   private _setupControllerMethods(ctor: ControllerClass) {
@@ -121,7 +130,7 @@ export class GrpcServer extends Context implements Server {
         this.bind(GrpcBindings.CONTEXT).to(this);
         this.bind(GrpcBindings.GRPC_CONTROLLER).toClass(ctor).inScope(BindingScope.SINGLETON);
         this.bind(GrpcBindings.GRPC_METHOD_NAME).to(methodName);
-        const sequence = await this.get(GrpcBindings.GRPC_SEQUENCE);
+        const sequence = await this.get<GrpcSequence>(GrpcBindings.GRPC_SEQUENCE);
         return sequence.unaryCall(call);
       };
 

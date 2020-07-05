@@ -5,7 +5,8 @@
 
 import {inject, Provider} from '@loopback/context';
 import {GrpcGenerator} from '../grpc.generator';
-import {CoreBindings, ApplicationConfig} from '@loopback/core';
+import {GrpcBindings} from '../keys';
+import {GrpcComponentConfig} from '../types';
 /**
  * This provider will return a GRPC TypeScript Generator
  * This can be used to generate typescript files and service declarations
@@ -13,11 +14,8 @@ import {CoreBindings, ApplicationConfig} from '@loopback/core';
  */
 export class GeneratorProvider implements Provider<GrpcGenerator> {
   private generator: GrpcGenerator;
-  constructor(
-    @inject(CoreBindings.APPLICATION_CONFIG)
-    protected config: ApplicationConfig,
-  ) {
-    this.generator = new GrpcGenerator(config.grpc);
+  constructor(@inject(GrpcBindings.CONFIG, {optional: true}) config: GrpcComponentConfig) {
+    this.generator = new GrpcGenerator(config);
   }
   public value(): GrpcGenerator {
     return this.generator;

@@ -8,7 +8,7 @@ import * as glob from 'glob';
 import {loadSync} from '@grpc/proto-loader';
 import {GrpcObject, loadPackageDefinition} from '@grpc/grpc-js';
 import {dirname, resolve} from 'path';
-import {GrpcService} from './types';
+import {GrpcComponentConfig} from './types';
 
 /**
  * GRPC TypeScript generator.
@@ -26,7 +26,7 @@ export class GrpcGenerator {
   /**
    * @param - config
    */
-  constructor(protected config: GrpcService) {}
+  constructor(protected config: GrpcComponentConfig) {}
 
   /**
    * This method will find and load all protos
@@ -37,10 +37,10 @@ export class GrpcGenerator {
    * @memberof GrpcGenerator
    */
   public execute(): void {
-    const protoPaths = this.getProtoPaths().map((path) => ({path, name: path.split('/').pop() ?? ''}));
-    protoPaths.forEach((path) => {
-      this.protos[path.name] = this.loadProto(path.path);
-      this.generate(path.path);
+    this.getProtoPaths().forEach((protoPath: string) => {
+      const protoName: string = protoPath.split('/').pop() ?? '';
+      this.protos[protoName] = this.loadProto(protoPath);
+      this.generate(protoPath);
     });
   }
 

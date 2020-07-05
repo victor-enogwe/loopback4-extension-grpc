@@ -3,23 +3,24 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Component, ProviderMap, Server, CoreBindings, Application, ApplicationConfig} from '@loopback/core';
+import {Component, ProviderMap, Server, CoreBindings, Application} from '@loopback/core';
 import {inject, Constructor} from '@loopback/context';
 import {GrpcBindings} from './keys';
 import {GrpcServer} from './grpc.server';
 import {GrpcSequence} from './grpc.sequence';
 import {GeneratorProvider} from './providers/generator.provider';
-import {GrpcService} from './types';
+import {GrpcComponentConfig} from './types';
+import {ServerProvider} from './providers/server.provider';
 /**
  * Grpc Component for LoopBack 4.
  */
 export class GrpcComponent implements Component {
-  static namespace: string;
   /**
    * Export GrpcProviders
    */
   providers: ProviderMap = {
-    [GrpcBindings.GRPC_GENERATOR]: GeneratorProvider,
+    [GrpcBindings.GRPC_SERVER.toString()]: ServerProvider,
+    [GrpcBindings.GRPC_GENERATOR.toString()]: GeneratorProvider,
   };
   /**
    * Export Grpc Server
@@ -30,17 +31,16 @@ export class GrpcComponent implements Component {
 
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,
-    @inject(CoreBindings.APPLICATION_CONFIG, {optional: true}) config: ApplicationConfig,
+    @inject(GrpcBindings.CONFIG, {optional: true}) config: GrpcComponentConfig,
   ) {
-    const configuration: GrpcService = config.grpc[GrpcComponent.namespace] ?? config.grpc;
     // Bind host, port, certs, proto path, package and sequence
-    app.bind(GrpcBindings.HOST).to(configuration.host ?? '127.0.0.1');
-    app.bind(GrpcBindings.PORT).to(configuration.port ?? 3000);
-    app.bind(GrpcBindings.PROTO_PATTERN).to(configuration.protoPattern);
-    app.bind(GrpcBindings.PROTO_IGNORES).to(configuration.protoIgnores);
-    app.bind(GrpcBindings.PROTO_OUT_DIR).to(configuration.protoOutDir);
-    app.bind(GrpcBindings.CWD).to(configuration.cwd ?? process.cwd());
-    app.bind(GrpcBindings.CERTS).to(configuration.certs);
-    app.bind(GrpcBindings.GRPC_SEQUENCE).toClass(configuration.sequence ?? GrpcSequence);
+    app.bind(GrpcBindings.HOST).to(config.host ?? '127.0.0.1');
+    app.bind(GrpcBindings.PORT).to(config.port ?? 3000);
+    app.bind(GrpcBindings.PROTO_PATTERN).to(config.protoPattern);
+    app.bind(GrpcBindings.PROTO_IGNORES).to(config.protoIgnores);
+    app.bind(GrpcBindings.PROTO_OUT_DIR).to(config.protoOutDir);
+    app.bind(GrpcBindings.CWD).to(config.cwd ?? process.cwd());
+    app.bind(GrpcBindings.CERTS).to(config.certs);
+    app.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.sequence ?? GrpcSequence);
   }
 }

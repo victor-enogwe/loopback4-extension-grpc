@@ -6,8 +6,8 @@
 import {inject} from '@loopback/context';
 import {ServerUnaryCall, ServerReadableStream, ServerDuplexStream, ServerWritableStream} from '@grpc/grpc-js';
 import {GrpcBindings} from './keys';
-
 import debugFactory from 'debug';
+
 const debug = debugFactory('loopback:grpc');
 
 /**

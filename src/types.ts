@@ -7,7 +7,7 @@ import {Constructor} from '@loopback/context';
 import {GrpcSequenceInterface} from './grpc.sequence';
 import {GrpcSecureOptions} from './keys';
 
-export interface GrpcService {
+export interface GrpcComponentConfig {
   cwd?: string;
   /**
    * glob pattern for proto files, default to `**\/*proto`

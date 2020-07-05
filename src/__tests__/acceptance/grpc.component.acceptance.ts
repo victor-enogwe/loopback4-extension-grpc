@@ -7,7 +7,7 @@ import {Constructor, inject} from '@loopback/context';
 import {Application} from '@loopback/core';
 import {expect} from '@loopback/testlab';
 import {loadSync} from '@grpc/proto-loader';
-import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcServer, GrpcService} from '../..';
+import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcServer, GrpcComponentConfig} from '../..';
 import {Greeter, HelloReply, HelloRequest, TestRequest, TestReply} from './greeter.proto';
 import {GrpcSequence} from '../../grpc.sequence';
 import path from 'path';
@@ -118,14 +118,13 @@ describe('GrpcComponent', () => {
  * Returns GRPC Enabled Application
  **/
 function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Application {
-  const grpcConfig: GrpcService = {port: 8080, protoOutDir: path.resolve(__dirname)};
+  const GrpcConfig: GrpcComponentConfig = {port: 8080, protoOutDir: path.resolve(__dirname)};
   if (sequence) {
-    grpcConfig.sequence = sequence;
+    GrpcConfig.sequence = sequence;
   }
-  const app = new Application({
-    grpc: {space: grpcConfig},
-  });
-  GrpcComponent.namespace = 'space';
+  const app = new Application({});
+
+  app.bind(GrpcBindings.CONFIG).to(GrpcConfig);
   app.component(GrpcComponent);
   return app;
 }
