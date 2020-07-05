@@ -14,7 +14,7 @@ import {GrpcComponentConfig} from '../types';
  */
 export class GeneratorProvider implements Provider<GrpcGenerator> {
   private generator: GrpcGenerator;
-  constructor(@inject(GrpcBindings.CONFIG, {optional: true}) config: GrpcComponentConfig) {
+  constructor(@inject(GrpcBindings.CONFIG) config: GrpcComponentConfig) {
     this.generator = new GrpcGenerator(config);
   }
   public value(): GrpcGenerator {

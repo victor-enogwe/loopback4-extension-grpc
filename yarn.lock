@@ -296,7 +296,7 @@
     tslib "^2.0.0"
     uuid "^8.1.0"
 
-"@loopback/context@^3.9.1", "@loopback/context@^3.9.2":
+"@loopback/context@^3.9.2":
   version "3.9.2"
   resolved "https://registry.yarnpkg.com/@loopback/context/-/context-3.9.2.tgz#8f22b467ab874b2f2ddaf181be4216143623212f"
   integrity sha512-dqbklyluFWZHAsUH2et+vESJHtpXqJ6hXLefysaFr7QPZ8pOMQutef9D4RcGt2bQH2gRAnYj6jXwEAgiINqPuQ==
@@ -309,16 +309,7 @@
     tslib "^2.0.0"
     uuid "^8.2.0"
 
-"@loopback/core@2.9.0":
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.0.tgz#748c3908334aa98f284bc5f55ea3b9029f0d9f38"
-  integrity sha512-d4/EiYvwmcLp4lygFasIwhadk/1/iFTJ8pzfWLXqjbYcl0B1ty9DzXQdTpfnrjnRJ4TKDFDWn3lfu9+5Uw4SAQ==
-  dependencies:
-    "@loopback/context" "^3.9.1"
-    debug "^4.1.1"
-    tslib "^2.0.0"
-
-"@loopback/core@^2.9.0", "@loopback/core@^2.9.1":
+"@loopback/core@2.9.1", "@loopback/core@^2.9.0", "@loopback/core@^2.9.1":
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.1.tgz#f6fa72cebc90dabf5c07eb79a2dd8ba30682d850"
   integrity sha512-aQNW2mHWdfOKYDsDKXzK7k1+DTgMvBf6FX2otoDt3jLrISHbzSay6RMZo7wZC02vGep/SBD2FnXw5kIxx1p6Cg==
