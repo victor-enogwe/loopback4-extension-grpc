@@ -122,9 +122,8 @@ function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Applic
   if (sequence) {
     GrpcConfig.sequence = sequence;
   }
-  const app = new Application({});
+  const app = new Application({grpc: GrpcConfig});
 
-  app.bind(GrpcBindings.CONFIG).to(GrpcConfig);
   app.component(GrpcComponent);
   return app;
 }

@@ -31,7 +31,6 @@ export class GrpcServer extends Context implements Server {
    * CoreBindings.APPLICATION_INSTANCE).
    * @param server - The actual GRPC Server module (injected via
    * @param options - The configuration options (injected via
-   * GRPCBindings.CONFIG).
    *
    */
   constructor(

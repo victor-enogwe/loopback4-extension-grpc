@@ -29,7 +29,10 @@ export class GrpcComponent implements Component {
     GrpcServer,
   };
 
-  constructor(@inject(CoreBindings.APPLICATION_INSTANCE) app: Application, @inject(GrpcBindings.CONFIG) config: GrpcComponentConfig) {
+  constructor(
+    @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,
+    @inject(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc')) config: GrpcComponentConfig,
+  ) {
     // Bind host, port, certs, proto path, package and sequence
     app.bind(GrpcBindings.HOST).to(config.host ?? '127.0.0.1');
     app.bind(GrpcBindings.PORT).to(config.port ?? 3000);
