@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {inject} from '@loopback/context';
+import {inject} from '@loopback/core';
 import {ServerUnaryCall, ServerReadableStream, ServerDuplexStream, ServerWritableStream} from '@grpc/grpc-js';
 import {GrpcBindings} from './keys';
 import debugFactory from 'debug';

@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {Component, ProviderMap, Server, CoreBindings, Application} from '@loopback/core';
-import {inject, Constructor} from '@loopback/context';
+import {inject, Constructor} from '@loopback/core';
 import {GrpcBindings} from './keys';
 import {GrpcServer} from './grpc.server';
 import {GrpcSequence} from './grpc.sequence';

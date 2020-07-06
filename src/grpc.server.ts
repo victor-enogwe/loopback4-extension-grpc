@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingScope, inject} from '@loopback/context';
+import {BindingScope, inject} from '@loopback/core';
 import {Application, ControllerClass, CoreBindings, Server, Context} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
 import {Server as RpcServer, ServerUnaryCall, ServerCredentials, ServiceDefinition, handleUnaryCall, GrpcObject} from '@grpc/grpc-js';

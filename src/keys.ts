@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingKey, Context} from '@loopback/context';
+import {BindingKey, Context} from '@loopback/core';
 import {KeyCertPair, Server} from '@grpc/grpc-js';
 import {GrpcSequenceInterface} from './grpc.sequence';
 import {GrpcGenerator} from './grpc.generator';

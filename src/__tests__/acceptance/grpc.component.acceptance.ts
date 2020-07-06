@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Constructor, inject} from '@loopback/context';
+import {Constructor, inject} from '@loopback/core';
 import {Application} from '@loopback/core';
 import {expect} from '@loopback/testlab';
 import {loadSync} from '@grpc/proto-loader';

@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {inject, Provider} from '@loopback/context';
+import {inject, Provider} from '@loopback/core';
 import {GrpcGenerator} from '../grpc.generator';
 import {GrpcComponentConfig} from '../types';
 import {CoreBindings} from '@loopback/core';
