@@ -38,7 +38,7 @@ export class GrpcServer extends Context implements Server {
     @inject(GrpcBindings.GRPC_SERVER) protected server: RpcServer,
     @inject(GrpcBindings.HOST) protected host: string,
     @inject(GrpcBindings.PORT) protected port: string,
-    @inject(GrpcBindings.GRPC_GENERATOR) protected generator: GrpcGenerator,
+    @inject('services.GrpcGenerator') protected generator: GrpcGenerator,
     @inject(GrpcBindings.CERTS) protected secureOptions?: GrpcSecureOptions,
   ) {
     super(app);

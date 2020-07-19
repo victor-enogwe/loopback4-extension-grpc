@@ -3,14 +3,14 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Component, ProviderMap, Server, CoreBindings, Application} from '@loopback/core';
+import {Component, ProviderMap, Server, CoreBindings, Application, ServiceOrProviderClass} from '@loopback/core';
 import {inject, Constructor} from '@loopback/core';
 import {GrpcBindings} from './keys';
 import {GrpcServer} from './grpc.server';
 import {GrpcSequence} from './grpc.sequence';
-import {GeneratorProvider} from './providers/generator.provider';
 import {GrpcComponentConfig} from './types';
 import {ServerProvider} from './providers/server.provider';
+import {GrpcGenerator} from './grpc.generator';
 /**
  * Grpc Component for LoopBack 4.
  */
@@ -20,7 +20,6 @@ export class GrpcComponent implements Component {
    */
   providers: ProviderMap = {
     [GrpcBindings.GRPC_SERVER.toString()]: ServerProvider,
-    [GrpcBindings.GRPC_GENERATOR.toString()]: GeneratorProvider,
   };
   /**
    * Export Grpc Server
@@ -28,6 +27,8 @@ export class GrpcComponent implements Component {
   servers: {[name: string]: Constructor<Server>} = {
     GrpcServer,
   };
+
+  services: ServiceOrProviderClass[] = [GrpcGenerator];
 
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,

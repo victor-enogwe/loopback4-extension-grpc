@@ -6,7 +6,6 @@
 import {BindingKey, Context} from '@loopback/core';
 import {KeyCertPair, Server} from '@grpc/grpc-js';
 import {GrpcSequenceInterface} from './grpc.sequence';
-import {GrpcGenerator} from './grpc.generator';
 
 export interface GrpcSecureOptions {
   rootCerts: Buffer;
@@ -22,7 +21,6 @@ export namespace GrpcBindings {
   export const GRPC_SEQUENCE = BindingKey.create<GrpcSequenceInterface>('grpc.sequence');
   export const GRPC_CONTROLLER = BindingKey.create<{[method: string]: Function}>('grpc.controller');
   export const GRPC_METHOD_NAME = BindingKey.create<string>('grpc.method.name');
-  export const GRPC_GENERATOR = BindingKey.create<GrpcGenerator>('grpc.generator');
   export const CONTEXT = BindingKey.create<Context>('grpc.context');
   export const HOST = BindingKey.create<string | undefined>('grpc.host');
   export const PORT = BindingKey.create<number | undefined>('grpc.port');

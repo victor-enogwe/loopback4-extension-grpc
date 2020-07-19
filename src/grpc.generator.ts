@@ -9,6 +9,7 @@ import {loadSync} from '@grpc/proto-loader';
 import {GrpcObject, loadPackageDefinition} from '@grpc/grpc-js';
 import {dirname, resolve} from 'path';
 import {GrpcComponentConfig} from './types';
+import {inject, CoreBindings} from '@loopback/core';
 
 /**
  * GRPC TypeScript generator.
@@ -26,7 +27,7 @@ export class GrpcGenerator {
   /**
    * @param - config
    */
-  constructor(protected config: GrpcComponentConfig) {}
+  constructor(@inject(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc')) protected config: GrpcComponentConfig) {}
 
   /**
    * This method will find and load all protos
