@@ -283,7 +283,7 @@
     source-map-support "^0.5.19"
     typescript "~3.9.5"
 
-"@loopback/context@^3.9.3":
+"@loopback/context@^3.9.2":
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/@loopback/context/-/context-3.9.3.tgz#f0f82c640a30784903f2301277f4c540426ebfc7"
   integrity sha512-Sdbf1CIqQV80QlEjcfhxh7okbyDTTza/q3gYjeeeZ3WQUVobBB66fV3g6hZ/lAxVIqHPlFjINVIoWqito3F5lA==
@@ -296,12 +296,12 @@
     tslib "^2.0.0"
     uuid "^8.2.0"
 
-"@loopback/core@^2.9.1":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.2.tgz#213a017eb50c5411e53d8ddc872949c69326ca78"
-  integrity sha512-ynG1DvPdi2pBIp4IouYOPWJoG8ZIx5rntUKUtC0QsYIT2TakWjwoyobmI2pAfWaXCTN4Ner/xKn+RsSMctTp5A==
+"@loopback/core@2.9.1":
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.1.tgz#f6fa72cebc90dabf5c07eb79a2dd8ba30682d850"
+  integrity sha512-aQNW2mHWdfOKYDsDKXzK7k1+DTgMvBf6FX2otoDt3jLrISHbzSay6RMZo7wZC02vGep/SBD2FnXw5kIxx1p6Cg==
   dependencies:
-    "@loopback/context" "^3.9.3"
+    "@loopback/context" "^3.9.2"
     debug "^4.1.1"
     tslib "^2.0.0"
 
@@ -316,7 +316,7 @@
     eslint-plugin-eslint-plugin "^2.3.0"
     eslint-plugin-mocha "^7.0.1"
 
-"@loopback/metadata@^2.2.2":
+"@loopback/metadata@2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@loopback/metadata/-/metadata-2.2.2.tgz#44331d1ddb1e0d1e7ace7a8aa3377d0bc55ade18"
   integrity sha512-Kx5LCtuo+KlM8FXbHNU/lKptf5IM47Ca/EF9b7pLfmFP1+Amc4SLIwawhJhnp/JZyV6oHqdfTxvxRavUcAuhqA==
