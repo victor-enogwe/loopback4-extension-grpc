@@ -283,12 +283,12 @@
     source-map-support "^0.5.19"
     typescript "~3.9.5"
 
-"@loopback/context@^3.9.2":
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/@loopback/context/-/context-3.9.2.tgz#8f22b467ab874b2f2ddaf181be4216143623212f"
-  integrity sha512-dqbklyluFWZHAsUH2et+vESJHtpXqJ6hXLefysaFr7QPZ8pOMQutef9D4RcGt2bQH2gRAnYj6jXwEAgiINqPuQ==
+"@loopback/context@^3.9.3":
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/@loopback/context/-/context-3.9.3.tgz#f0f82c640a30784903f2301277f4c540426ebfc7"
+  integrity sha512-Sdbf1CIqQV80QlEjcfhxh7okbyDTTza/q3gYjeeeZ3WQUVobBB66fV3g6hZ/lAxVIqHPlFjINVIoWqito3F5lA==
   dependencies:
-    "@loopback/metadata" "^2.2.2"
+    "@loopback/metadata" "^2.2.3"
     "@types/debug" "^4.1.5"
     debug "^4.1.1"
     hyperid "^2.0.5"
@@ -296,12 +296,12 @@
     tslib "^2.0.0"
     uuid "^8.2.0"
 
-"@loopback/core@^2.8.0":
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.1.tgz#f6fa72cebc90dabf5c07eb79a2dd8ba30682d850"
-  integrity sha512-aQNW2mHWdfOKYDsDKXzK7k1+DTgMvBf6FX2otoDt3jLrISHbzSay6RMZo7wZC02vGep/SBD2FnXw5kIxx1p6Cg==
+"@loopback/core@^2.9.1":
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@loopback/core/-/core-2.9.2.tgz#213a017eb50c5411e53d8ddc872949c69326ca78"
+  integrity sha512-ynG1DvPdi2pBIp4IouYOPWJoG8ZIx5rntUKUtC0QsYIT2TakWjwoyobmI2pAfWaXCTN4Ner/xKn+RsSMctTp5A==
   dependencies:
-    "@loopback/context" "^3.9.2"
+    "@loopback/context" "^3.9.3"
     debug "^4.1.1"
     tslib "^2.0.0"
 
@@ -316,13 +316,23 @@
     eslint-plugin-eslint-plugin "^2.3.0"
     eslint-plugin-mocha "^7.0.1"
 
-"@loopback/metadata@^2.2.0", "@loopback/metadata@^2.2.2":
+"@loopback/metadata@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@loopback/metadata/-/metadata-2.2.2.tgz#44331d1ddb1e0d1e7ace7a8aa3377d0bc55ade18"
   integrity sha512-Kx5LCtuo+KlM8FXbHNU/lKptf5IM47Ca/EF9b7pLfmFP1+Amc4SLIwawhJhnp/JZyV6oHqdfTxvxRavUcAuhqA==
   dependencies:
     debug "^4.1.1"
     lodash "^4.17.15"
+    reflect-metadata "^0.1.13"
+    tslib "^2.0.0"
+
+"@loopback/metadata@^2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@loopback/metadata/-/metadata-2.2.3.tgz#0c11c3c8f7ef35bd5cdf789ff28472b28496d60e"
+  integrity sha512-Z64M3xeFii0NPs1P4VN/muv35LoFlQxUoMYI3YNSpCT6xpfRqc7M4CrnMTx/t853N0wt3QWK89l+hDyPJcUwjg==
+  dependencies:
+    debug "^4.1.1"
+    lodash "^4.17.19"
     reflect-metadata "^0.1.13"
     tslib "^2.0.0"
 
@@ -2282,6 +2292,11 @@ lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 log-symbols@3.0.0:
   version "3.0.0"
