@@ -1,6 +1,6 @@
 {
   "name": "loopback-grpc",
-  "version": "0.1.51",
+  "version": "0.1.52",
   "description": "A gRPC extension for LoopBack Next",
   "main": "index.js",
   "engines": {
@@ -52,7 +52,7 @@
   "dependencies": {
     "@grpc/grpc-js": "1.1.1",
     "@grpc/proto-loader": "0.5.4",
-    "@loopback/core": "2.9.2",
+    "@loopback/core": "2.9.1",
     "@loopback/metadata": "2.2.2",
     "@mean-expert/protoc-ts": "npm:protoc-ts@0.0.5",
     "debug": "^4.1.1",
@@ -74,7 +74,7 @@
     "eslint-plugin-mocha": "^7.0.0"
   },
   "peerDependencies": {
-    "@loopback/core": "^2.9.1",
+    "@loopback/core": "2.9.1",
     "@loopback/metadata": "^2.2.2"
   }
 }
