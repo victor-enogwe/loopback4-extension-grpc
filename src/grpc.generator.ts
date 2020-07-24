@@ -27,7 +27,7 @@ export class GrpcGenerator {
   /**
    * @param - config
    */
-  constructor(@inject(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc')) protected config: GrpcComponentConfig) {}
+  constructor(protected config: GrpcComponentConfig) {}
 
   /**
    * This method will find and load all protos

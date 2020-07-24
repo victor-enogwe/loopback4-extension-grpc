@@ -1,6 +1,6 @@
 {
   "name": "loopback-grpc",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "A gRPC extension for LoopBack Next",
   "main": "index.js",
   "engines": {
