@@ -9,7 +9,6 @@ import {loadSync} from '@grpc/proto-loader';
 import {GrpcObject, loadPackageDefinition} from '@grpc/grpc-js';
 import {dirname, resolve} from 'path';
 import {GrpcComponentConfig} from './types';
-import {inject, CoreBindings} from '@loopback/core';
 
 /**
  * GRPC TypeScript generator.

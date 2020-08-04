@@ -3,11 +3,11 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Constructor, inject} from '@loopback/core';
+import {Constructor, inject, CoreBindings} from '@loopback/core';
 import {Application} from '@loopback/core';
 import {expect} from '@loopback/testlab';
 import {loadSync} from '@grpc/proto-loader';
-import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcServer, GrpcComponentConfig} from '../..';
+import {grpc, GrpcBindings, GrpcComponent, GrpcSequenceInterface, GrpcComponentConfig} from '../..';
 import {Greeter, HelloReply, HelloRequest, TestRequest, TestReply} from './greeter.proto';
 import {GrpcSequence} from '../../grpc.sequence';
 import path from 'path';
@@ -26,12 +26,6 @@ const app: Application = givenApplication();
 })();
 **/
 describe('GrpcComponent', () => {
-  // GRPC Component Configurations
-  it('defines grpc component configurations', async () => {
-    const app: Application = givenApplication();
-    const lbGrpcServer = await app.getServer<GrpcServer>('GrpcServer');
-    expect(lbGrpcServer.getSync(GrpcBindings.PORT)).to.be.eql(8080);
-  });
   // LoopBack GRPC Service
   it('creates a grpc service', async () => {
     // Define Greeter Service Implementation
@@ -118,7 +112,7 @@ describe('GrpcComponent', () => {
  * Returns GRPC Enabled Application
  **/
 function givenApplication(sequence?: Constructor<GrpcSequenceInterface>): Application {
-  const GrpcConfig: GrpcComponentConfig = {port: 8080, protoOutDir: path.resolve(__dirname)};
+  const GrpcConfig: GrpcComponentConfig = {host: '127.0.0.1', port: 8080, protoOutDir: path.resolve(__dirname)};
   if (sequence) {
     GrpcConfig.sequence = sequence;
   }
@@ -140,10 +134,8 @@ function getGrpcClient(app: Application) {
   });
   const proto = loadPackageDefinition(packageDef);
   const client = proto.greeterpackage as GrpcObject;
-  return new (client.Greeter as ServiceClientConstructor)(
-    `${app.getSync(GrpcBindings.HOST)}:${app.getSync(GrpcBindings.PORT)}`,
-    credentials.createInsecure(),
-  );
+  const {port, host} = app.getSync(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc'));
+  return new (client.Greeter as ServiceClientConstructor)(`${host}:${port}`, credentials.createInsecure());
 }
 /**
  * Callback to Promise Wrapper

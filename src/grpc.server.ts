@@ -3,14 +3,22 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingScope, inject} from '@loopback/core';
-import {Application, ControllerClass, CoreBindings, Server, Context} from '@loopback/core';
+import {BindingScope, inject, CoreBindings, Application} from '@loopback/core';
+import {ControllerClass, Server as LbServer, Context} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
-import {Server as RpcServer, ServerUnaryCall, ServerCredentials, ServiceDefinition, handleUnaryCall, GrpcObject} from '@grpc/grpc-js';
+import {
+  Server as RpcServer,
+  ServerUnaryCall,
+  ServerCredentials,
+  ServiceDefinition,
+  handleUnaryCall,
+  GrpcObject,
+  Server,
+} from '@grpc/grpc-js';
 import {GRPC_METHODS} from './decorators/grpc.decorator';
 import {GrpcGenerator} from './grpc.generator';
 import {GrpcBindings, GrpcSecureOptions} from './keys';
-import {GrpcMethod} from './types';
+import {GrpcMethod, GrpcComponentConfig} from './types';
 
 import debugFactory from 'debug';
 import {GrpcSequence} from './grpc.sequence';
@@ -21,8 +29,14 @@ const debug = debugFactory('loopback:grpc');
 /**
  * This Class provides a LoopBack Server implementing gRPC
  */
-export class GrpcServer extends Context implements Server {
+export class GrpcServer extends Context implements LbServer {
   protected _listening = false;
+  protected server: RpcServer = new Server();
+  protected generator: GrpcGenerator;
+  protected host: string;
+  protected port: number;
+  protected secureOptions?: GrpcSecureOptions;
+
   /**
    * @memberof GrpcServer
    * Creates an instance of GrpcServer.
@@ -35,13 +49,15 @@ export class GrpcServer extends Context implements Server {
    */
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) protected app: Application,
-    @inject(GrpcBindings.GRPC_SERVER) protected server: RpcServer,
-    @inject(GrpcBindings.HOST) protected host: string,
-    @inject(GrpcBindings.PORT) protected port: string,
-    @inject(GrpcBindings.GRPC_GENERATOR) protected generator: GrpcGenerator,
-    @inject(GrpcBindings.CERTS) protected secureOptions?: GrpcSecureOptions,
+    @inject(GrpcBindings.CONFIG) config: GrpcComponentConfig,
   ) {
     super(app);
+    // Bind host, port, certs, proto path, package and sequence
+    this.host = config.host ?? '127.0.0.1';
+    this.port = config.port ?? 3000;
+    this.secureOptions = config.certs;
+    this.generator = new GrpcGenerator(config);
+    this.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.sequence ?? GrpcSequence);
     this.migrateSchema();
   }
 

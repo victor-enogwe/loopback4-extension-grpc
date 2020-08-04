@@ -7,10 +7,8 @@ import {Component, ProviderMap, Server, CoreBindings, Application} from '@loopba
 import {inject, Constructor} from '@loopback/core';
 import {GrpcBindings} from './keys';
 import {GrpcServer} from './grpc.server';
-import {GrpcSequence} from './grpc.sequence';
 import {GrpcComponentConfig} from './types';
-import {ServerProvider} from './providers/server.provider';
-import {generatorProvider} from './providers/generator.provider';
+import {configProvider} from './providers/config.provider';
 
 /**
  * Grpc Component for LoopBack 4.
@@ -31,18 +29,8 @@ export class GrpcComponent implements Component {
     @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,
     @inject(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc')) config: GrpcComponentConfig,
   ) {
-    // Bind host, port, certs, proto path, package and sequence
-    app.bind(GrpcBindings.HOST).to(config.host ?? '127.0.0.1');
-    app.bind(GrpcBindings.PORT).to(config.port ?? 3000);
-    app.bind(GrpcBindings.PROTO_PATTERN).to(config.protoPattern);
-    app.bind(GrpcBindings.PROTO_IGNORES).to(config.protoIgnores);
-    app.bind(GrpcBindings.PROTO_OUT_DIR).to(config.protoOutDir);
-    app.bind(GrpcBindings.CWD).to(config.cwd ?? process.cwd());
-    app.bind(GrpcBindings.CERTS).to(config.certs);
-    app.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.sequence ?? GrpcSequence);
     this.providers = {
-      [GrpcBindings.GRPC_SERVER.toString()]: ServerProvider,
-      [GrpcBindings.GRPC_GENERATOR.toString()]: generatorProvider(config),
+      [GrpcBindings.CONFIG.toString()]: configProvider(config),
     };
   }
 }
