@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingScope, inject, CoreBindings, Application} from '@loopback/core';
+import {BindingScope, inject, CoreBindings, Application, config as configuration} from '@loopback/core';
 import {ControllerClass, Server as LbServer, Context} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
 import {
@@ -49,15 +49,15 @@ export class GrpcServer extends Context implements LbServer {
    */
   constructor(
     @inject(CoreBindings.APPLICATION_INSTANCE) protected app: Application,
-    @inject(GrpcBindings.CONFIG) config: GrpcComponentConfig,
+    @configuration('config') protected rpcConfig: GrpcComponentConfig,
   ) {
     super(app);
     // Bind host, port, certs, proto path, package and sequence
-    this.host = config.host ?? '127.0.0.1';
-    this.port = config.port ?? 3000;
-    this.secureOptions = config.certs;
-    this.generator = new GrpcGenerator(config);
-    this.bind(GrpcBindings.GRPC_SEQUENCE).toClass(config.sequence ?? GrpcSequence);
+    this.host = rpcConfig.host ?? '127.0.0.1';
+    this.port = rpcConfig.port ?? 3000;
+    this.secureOptions = rpcConfig.certs;
+    this.generator = new GrpcGenerator(rpcConfig);
+    this.bind(GrpcBindings.GRPC_SEQUENCE).toClass(rpcConfig.sequence ?? GrpcSequence);
     this.migrateSchema();
   }
 

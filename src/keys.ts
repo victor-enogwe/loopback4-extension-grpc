@@ -17,7 +17,6 @@ export interface GrpcSecureOptions {
  * Binding keys used by this component.
  */
 export namespace GrpcBindings {
-  export const CONFIG = BindingKey.create<string>('grpc.config');
   export const GRPC_SEQUENCE = BindingKey.create<GrpcSequenceInterface>('grpc.sequence');
   export const GRPC_CONTROLLER = BindingKey.create<{[method: string]: Function}>('grpc.controller');
   export const GRPC_METHOD_NAME = BindingKey.create<string>('grpc.method.name');

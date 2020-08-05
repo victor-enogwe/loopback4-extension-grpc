@@ -5,10 +5,8 @@
 
 import {Component, ProviderMap, Server, CoreBindings, Application} from '@loopback/core';
 import {inject, Constructor} from '@loopback/core';
-import {GrpcBindings} from './keys';
 import {GrpcServer} from './grpc.server';
 import {GrpcComponentConfig} from './types';
-import {configProvider} from './providers/config.provider';
 
 /**
  * Grpc Component for LoopBack 4.
@@ -29,8 +27,8 @@ export class GrpcComponent implements Component {
     @inject(CoreBindings.APPLICATION_INSTANCE) app: Application,
     @inject(CoreBindings.APPLICATION_CONFIG.deepProperty('grpc')) config: GrpcComponentConfig,
   ) {
-    this.providers = {
-      [GrpcBindings.CONFIG.toString()]: configProvider(config),
-    };
+    for (const serverKey in this.servers) {
+      app.configure(`servers.${serverKey}`).to({config});
+    }
   }
 }
