@@ -58,7 +58,7 @@ export class GrpcServer extends Context implements LbServer {
     this.port = rpcConfig.port ?? 3000;
     this.secureOptions = rpcConfig.certs;
     this.generator = new GrpcGenerator(rpcConfig);
-    this.controllers = this.rpcConfig.controllers?.map(this.controller);
+    this.controllers = this.rpcConfig.controllers?.map(this.controller.bind(this));
     this.bind(GrpcBindings.GRPC_SEQUENCE).toClass(rpcConfig.sequence ?? GrpcSequence);
     this.migrateSchema();
   }
