@@ -3,11 +3,16 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Constructor} from '@loopback/core';
+import {Constructor, ControllerClass} from '@loopback/core';
 import {GrpcSequenceInterface} from './grpc.sequence';
 import {GrpcSecureOptions} from './keys';
 
+export declare type ControllerInstance = {
+  [name: string]: unknown;
+} & object;
+
 export interface GrpcComponentConfig {
+  controllers?: ControllerClass<ControllerInstance>[];
   cwd?: string;
   /**
    * glob pattern for proto files, default to `**\/*proto`

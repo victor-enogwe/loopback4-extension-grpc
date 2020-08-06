@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {BindingScope, inject, CoreBindings, Application, config as configuration} from '@loopback/core';
+import {BindingScope, inject, CoreBindings, Application, config as configuration, Binding} from '@loopback/core';
 import {ControllerClass, Server as LbServer, Context} from '@loopback/core';
 import {MetadataInspector} from '@loopback/metadata';
 import {
@@ -18,7 +18,7 @@ import {
 import {GRPC_METHODS} from './decorators/grpc.decorator';
 import {GrpcGenerator} from './grpc.generator';
 import {GrpcBindings, GrpcSecureOptions} from './keys';
-import {GrpcMethod, GrpcComponentConfig} from './types';
+import {GrpcMethod, GrpcComponentConfig, ControllerInstance} from './types';
 
 import debugFactory from 'debug';
 import {GrpcSequence} from './grpc.sequence';
@@ -33,6 +33,7 @@ export class GrpcServer extends Context implements LbServer {
   protected _listening = false;
   protected server: RpcServer = new Server();
   protected generator: GrpcGenerator;
+  protected controllers?: Array<Binding<ControllerClass<ControllerInstance>>>;
   protected host: string;
   protected port: number;
   protected secureOptions?: GrpcSecureOptions;
@@ -57,6 +58,7 @@ export class GrpcServer extends Context implements LbServer {
     this.port = rpcConfig.port ?? 3000;
     this.secureOptions = rpcConfig.certs;
     this.generator = new GrpcGenerator(rpcConfig);
+    this.controllers = this.rpcConfig.controllers?.map(this.controller);
     this.bind(GrpcBindings.GRPC_SEQUENCE).toClass(rpcConfig.sequence ?? GrpcSequence);
     this.migrateSchema();
   }
@@ -78,6 +80,10 @@ export class GrpcServer extends Context implements LbServer {
       if (!ctor) throw new Error(`The controller ${controllerName} was not bound via .toClass()`);
       this._setupControllerMethods(ctor);
     }
+  }
+
+  controller(controllerCtor: ControllerClass<ControllerInstance>): Binding<ControllerClass<ControllerInstance>> {
+    return this.bind('controllers.' + controllerCtor.name).toClass(controllerCtor);
   }
 
   async start(): Promise<void> {
