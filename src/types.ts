@@ -14,6 +14,7 @@ export declare type ControllerInstance = {
 export interface GrpcComponentConfig {
   controllers?: ControllerClass<ControllerInstance>[];
   cwd?: string;
+  generateProtoTs?: boolean;
   /**
    * glob pattern for proto files, default to `**\/*proto`
    */
